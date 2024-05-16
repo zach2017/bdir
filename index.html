@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>Business Listing</title>
@@ -23,64 +23,68 @@
   <div id="businessList"></div>
 
   <script>
-    // Function to parse CSV data
-    function parseCSV(csv) {
-      const lines = csv.split('\n');
-      const result = [];
-      const headers = lines[0].split(',');
-
-      for (let i = 1; i < lines.length; i++) {
-        const obj = {};
-        const currentline = lines[i].split(',');
-
-        for (let j = 0; j < headers.length; j++) {
-          obj[headers[j]] = currentline[j];
-        }
-
-        result.push(obj);
-      }
-
-      return result;
+   // Function to parse CSV data
+function parseCSV(csv) {
+  const lines = csv.split('\n');
+  const result = [];
+  const headers = lines[0].split(',');
+  console.log(headers)
+  for (let i = 1; i < lines.length; i++) {
+    const obj = {};
+    const currentline = lines[i].split(',');
+    console.log(currentline)
+    for (let j = 0; j < headers.length; j++) {
+        console.log(currentline[j])
+      obj[headers[j]] = currentline[j];
     }
 
-    // Function to display business listing
-    function displayBusinesses(businesses) {
-      const businessList = document.getElementById('businessList');
+    result.push(obj);
+  }
 
-      businesses.forEach(business => {
-        const div = document.createElement('div');
-        div.className = 'business';
+  return result;
+}
 
-        const logo = document.createElement('img');
-        logo.className = 'logo';
-        logo.src = business.Logo;
-        logo.alt = business.Name;
-        div.appendChild(logo);
+// Function to display business listing
+function displayBusinesses(businesses) {
+  const businessList = document.getElementById('businessList');
 
-        const info = document.createElement('div');
-        info.className = 'info';
-        info.innerHTML = `
-          <h2>${business.Name}</h2>
-          <p>${business.Description}</p>
-          <p>Address: ${business.Address}</p>
-          <p>Phone: ${business.Phone}</p>
-        `;
-        div.appendChild(info);
+  businesses.forEach(business => {
+    if (business.Approved.toLowerCase() === 'yes') {
+      const div = document.createElement('div');
+      div.className = 'business';
 
-        businessList.appendChild(div);
-      });
+      const logo = document.createElement('img');
+      logo.className = 'logo';
+      logo.src = business.Logo;
+      logo.alt = business.Name;
+      div.appendChild(logo);
+
+      const info = document.createElement('div');
+      info.className = 'info';
+      info.innerHTML = `
+        <h2>${business.Name}</h2>
+        <p>${business.Description}</p>
+        <p>Address: ${business.Address}</p>
+        <p>Phone: ${business.Phone}</p>
+      `;
+      div.appendChild(info);
+
+      businessList.appendChild(div);
     }
+  });
+}
 
-    // Fetch CSV data from server
-    fetch('businesses.csv')
-      .then(response => response.text())
-      .then(data => {
-        const businesses = parseCSV(data);
-        displayBusinesses(businesses);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+// Fetch CSV data from server
+fetch('businesses.csv')
+  .then(response => response.text())
+  .then(data => {
+    const businesses = parseCSV(data);
+    displayBusinesses(businesses);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
   </script>
 </body>
 </html>
