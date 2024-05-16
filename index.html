@@ -32,10 +32,11 @@ function parseCSV(csv) {
   for (let i = 1; i < lines.length; i++) {
     const obj = {};
     let currentline = lines[i].split(',');
-
+ console.log(currentline)
     // Handle fields enclosed in quotes
     for (let j = 0; j < currentline.length; j++) {
       if (currentline[j].charAt(0) === '"') {
+        console.log(currentline[j])
         let quotedField = currentline[j].substring(1);
         for (let k = j + 1; k < currentline.length; k++) {
           quotedField += ',' + currentline[k];
