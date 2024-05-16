@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Business Listing</title>
+  <style>
+    .business {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      width: 100px;
+      height: 100px;
+      margin-right: 20px;
+    }
+    .info {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Business Listing</h1>
+  <div id="businessList"></div>
+
+  <script>
+   // Function to parse CSV data
+function parseCSV(csv) {
+  const lines = csv.split('\n');
+  const result = [];
+  const headers = lines[0].split(',');
+
+  for (let i = 1; i < lines.length; i++) {
+    const obj = {};
+    const currentline = lines[i].split(',');
+
+    for (let j = 0; j < headers.length; j++) {
+      obj[headers[j]] = currentline[j];
+    }
+
+    result.push(obj);
+  }
+
+  return result;
+}
+
+// Function to display business listing
+function displayBusinesses(businesses) {
+  const businessList = document.getElementById('businessList');
+
+  businesses.forEach(business => {
+    if (business.Approved.toLowerCase() === 'yes') {
+      const div = document.createElement('div');
+      div.className = 'business';
+
+      const logo = document.createElement('img');
+      logo.className = 'logo';
+      logo.src = business.Logo;
+      logo.alt = business.Name;
+      div.appendChild(logo);
+
+      const info = document.createElement('div');
+      info.className = 'info';
+      info.innerHTML = `
+        <h2>${business.Name}</h2>
+        <p>${business.Description}</p>
+        <p>Address: ${business.Address}</p>
+        <p>Phone: ${business.Phone}</p>
+      `;
+      div.appendChild(info);
+
+      businessList.appendChild(div);
+    }
+  });
+}
+
+// Fetch CSV data from server
+fetch('businesses.csv')
+  .then(response => response.text())
+  .then(data => {
+    const businesses = parseCSV(data);
+    displayBusinesses(businesses);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+  </script>
+</body>
+</html>
